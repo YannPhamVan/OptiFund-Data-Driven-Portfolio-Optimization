@@ -1,1 +1,1 @@
-# OptiFund-Data-Driven-Portfolio-Optimization
+# OptiFund : Data-Driven Portfolio Optimization
