@@ -1,0 +1,7 @@
+name: 'stock_analysis_dbt'
+version: '1.0.0'
+profile: 'default'
+
+models:
+  stock_analysis:
+    materialized: table

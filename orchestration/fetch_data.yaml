@@ -1,0 +1,17 @@
+id: fetch_stock_data
+namespace: stock_analysis
+
+inputs:
+  tickers:
+    type: list
+    required: true
+
+steps:
+  - id: fetch
+    type: io.kestra.plugin.scripts.python.Python
+    script: |
+      from data_ingestion.fetch_data import fetch_stock_data
+      
+      tickers = {{ inputs.tickers }}
+      data = fetch_stock_data(tickers, "2023-01-01", "2023-12-31")
+      print(data.head())
