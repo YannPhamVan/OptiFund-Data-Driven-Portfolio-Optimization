@@ -4,12 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-yfinance = "*"
 pandas = "*"
-lxml = "*"
-pyarrow = "*"
+jupyter = "*"
+yfinance = "*"
+numpy = "*"
+pandas-datareader = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "3.13"
