@@ -1,0 +1,40 @@
+id: fetch_indices_data
+namespace: zoomcamp-project
+
+tasks:
+  - id: fetch_data
+    type: io.kestra.plugin.scripts.python.Script
+    description: "Fetch historical index data using yfinance and load into GCS"
+    docker:
+      image: python:3.9-slim
+    beforeCommands:
+      - pip install --no-cache-dir yfinance pandas
+    script: |
+      import yfinance as yf
+      import pandas as pd
+
+      # Define all 38 indices
+      tickers = [
+          "^AEX", "^AORD", "^BSESN", "^BVSP", "^CN20", "^GSPC", "^IBEX", "^IXIC",
+          "^N100", "^N150", "^NBI", "^NDX", "^OEX", "^RUT", "^SKEW", "^SOX",
+          "^SPXEW", "000001.SS", "^STOXX", "^STOXX50E", "^VIX", "^VVIX", "^VXD",
+          "^VXN", "^W5000", "^AXJO", "^DJI", "^DJT", "^DJU", "^FCHI", "^FTSE",
+          "^GDAXI", "^HSI", "^N225", "^NZ50", "^OMXC25", "^OSEAX", "^STI"
+      ]
+
+      # Fetch data in one request
+      df = yf.download(tickers, period="max", interval="1d", auto_adjust=True)["Close"]
+      # Save as CSV
+      file_path = "data.csv"
+      df.to_csv(file_path, index=False)
+
+    outputFiles:
+      - data.csv
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    description: "Upload the extracted data to GCS"
+    serviceAccount: "{{kv('GCP_CREDS')}}"
+    projectId: "{{kv('GCP_PROJECT_ID')}}"
+    from: "{{ outputs.fetch_data.outputFiles['data.csv'] }}"
+    to: "gs://{{kv('GCP_BUCKET_NAME')}}/raw/data.csv"
