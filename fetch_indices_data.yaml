@@ -29,7 +29,7 @@ tasks:
       df.to_csv(file_path, index=False)
 
     outputFiles:
-      - data.csv
+      - data.csv  # Declare specifickly file in output
 
   - id: upload_to_gcs
     type: io.kestra.plugin.gcp.gcs.Upload
@@ -38,3 +38,9 @@ tasks:
     projectId: "{{kv('GCP_PROJECT_ID')}}"
     from: "{{ outputs.fetch_data.outputFiles['data.csv'] }}"
     to: "gs://{{kv('GCP_BUCKET_NAME')}}/raw/data.csv"
+
+triggers:
+  - id: daily_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 0 * * *"  # Daily execution at 00:00 UTC
+
