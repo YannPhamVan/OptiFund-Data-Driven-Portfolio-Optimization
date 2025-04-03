@@ -15,21 +15,65 @@ tasks:
 
       # Define all 38 indices
       tickers = [
-          "^AEX", "^AORD", "^BSESN", "^BVSP", "^CN20", "^GSPC", "^IBEX", "^IXIC",
+          "^AEX", "^AORD", "^BSESN", "^BVSP", "^CN20", "^GSPC", "^IBEX", "^IXIC", "000001.SS",
           "^N100", "^N150", "^NBI", "^NDX", "^OEX", "^RUT", "^SKEW", "^SOX",
-          "^SPXEW", "000001.SS", "^STOXX", "^STOXX50E", "^VIX", "^VVIX", "^VXD",
+          "^SPXEW", "^STOXX", "^STOXX50E", "^VIX", "^VVIX", "^VXD",
           "^VXN", "^W5000", "^AXJO", "^DJI", "^DJT", "^DJU", "^FCHI", "^FTSE",
           "^GDAXI", "^HSI", "^N225", "^NZ50", "^OMXC25", "^OSEAX", "^STI"
       ]
 
       # Fetch data in one request
-      df = yf.download(tickers, period="9d", interval="1d", auto_adjust=True)["Close"]
+      df = yf.download(tickers, period="max", interval="1d", auto_adjust=True)["Close"]
+      # Correspondence dictionary
+      rename_dict = {
+          "^AEX": "AEX_Index",
+          "^AORD": "All_Ordinaries_Australia",
+          "^BSESN": "Bombay_BSE_30",
+          "^BVSP": "Bovespa_Index_Bresil",
+          "^CN20": "Cac_Next20",
+          "^GSPC": "S&P_500",
+          "^IBEX": "IBEX",
+          "^IXIC": "Nasdaq_Composite",
+          "^N100": "Euronext_100",
+          "^N150": "Next_150",
+          "^NBI": "Nasdaq_Biotechnology",
+          "^NDX": "Nasdaq_100",
+          "^OEX": "S&P_100",
+          "^RUT": "Russell_2000_Index",
+          "^SKEW": "CBOE_SKEW_INDEX",
+          "^SOX": "Semiconductor_Sector",
+          "^SPXEW": "S&P_500_Equal_Weighted",
+          "000001.SS": "China_Shanghai_Composite",
+          "^STOXX": "Europe_Stoxx_600",
+          "^STOXX50E": "Euro_Stoxx_50",
+          "^VIX": "Volatility_Index_VIX",
+          "^VVIX": "VVIX",
+          "^VXD": "DJIA_Volatility",
+          "^VXN": "NASDAQ_100_Volatility",
+          "^W5000": "Wilshire_5000_Total_Market",
+          "^AXJO": "S&P_ASX_200",
+          "^DJI": "Dow_Jones_Industrial_Average",
+          "^DJT": "Dow_Jones_Transportation_Average",
+          "^DJU": "Dow_Jones_Utility_Average",
+          "^FCHI": "CAC_40",
+          "^FTSE": "FTSE_100",
+          "^GDAXI": "DAX_P",
+          "^HSI": "HANG_SENG_INDEX",
+          "^N225": "Nikkei_225",
+          "^NZ50": "S&P_NZX_50_INDEX_GROSS",
+          "^OMXC25": "OMX_Copenhagen_25_Index",
+          "^OSEAX": "Oslo_Bors_All_Share_Index_GI",
+          "^STI": "STI_Index"
+      }
+      # Apply transformation
+      df.rename(columns=rename_dict, inplace=True)
+
       # Save as CSV
       file_path = "data.csv"
       df.to_csv(file_path, index=True)
 
     outputFiles:
-      - data.csv  # Explicitly declare the output file
+      - "data.csv"  # Explicitly declare the output file
 
   - id: upload_to_gcs
     type: io.kestra.plugin.gcp.gcs.Upload
@@ -40,45 +84,100 @@ tasks:
     to: "gs://{{kv('GCP_BUCKET_NAME')}}/raw/data.csv"
 
   - id: load_to_bigquery
-    type: io.kestra.plugin.scripts.python.Script
-    description: "Load data from GCS to BigQuery using dlt"
-    docker:
-      image: python:3.9-slim
-    beforeCommands:
-      - pip install --no-cache-dir dlt[bigquery] pandas
-    script: |
-      import dlt
-      import pandas as pd
-      import gcsfs
-
-      # Initialize dlt pipeline
-      pipeline = dlt.pipeline(
-          pipeline_name="gcs_to_bigquery",
-          destination="bigquery",
-          dataset_name="{{kv('GCP_DATASET')}}"
-      )
-
-      # Read CSV from GCS
-      fs = gcsfs.GCSFileSystem()
-      gcs_path = "gs://{{kv('GCP_BUCKET_NAME')}}/raw/data.csv"
-      with fs.open(gcs_path, 'r') as f:
-        df = pd.read_csv(f)
-
-      # Load to BigQuery
-      pipeline.run(df, table_name="indices_data", write_disposition="replace")
-
-  - id: purge_files
-    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
-    description: If you'd like to explore Kestra outputs, disable it.
-    disabled: true
-
-pluginDefaults:
-  - type: io.kestra.plugin.gcp
-    values:
-      serviceAccount: "{{kv('GCP_CREDS')}}"
-      projectId: "{{kv('GCP_PROJECT_ID')}}"
-      location: "{{kv('GCP_LOCATION')}}"
-      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+    type: io.kestra.plugin.gcp.bigquery.Load
+    description: "Load data from GCS to BigQuery"
+    serviceAccount: "{{kv('GCP_CREDS')}}"
+    projectId: "{{kv('GCP_PROJECT_ID')}}"
+    destinationTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.indices_data"
+    format: CSV
+    from: "{{ outputs.fetch_data.outputFiles['data.csv'] }}"
+    writeDisposition: "WRITE_TRUNCATE"
+    autodetect: false
+    schema:
+      fields:
+        - name: Date
+          type: DATE
+        - name: China_Shanghai_Composite
+          type: FLOAT64
+        - name: AEX_Index
+          type: FLOAT64
+        - name: All_Ordinaries_Australia
+          type: FLOAT64
+        - name: S&P_ASX_200
+          type: FLOAT64
+        - name: Bombay_BSE_30
+          type: FLOAT64
+        - name: Bovespa_Index_Bresil
+          type: FLOAT64
+        - name: Cac_Next20
+          type: FLOAT64
+        - name: Dow_Jones_Industrial_Average
+          type: FLOAT64
+        - name: Dow_Jones_Transportation_Average
+          type: FLOAT64
+        - name: Dow_Jones_Utility_Average
+          type: FLOAT64
+        - name: CAC_40
+          type: FLOAT64
+        - name: FTSE_100
+          type: FLOAT64
+        - name: DAX_P
+          type: FLOAT64
+        - name: S&P_500
+          type: FLOAT64
+        - name: HANG_SENG_INDEX
+          type: FLOAT64
+        - name: IBEX
+          type: FLOAT64
+        - name: Nasdaq_Composite
+          type: FLOAT64
+        - name: Euronext_100
+          type: FLOAT64
+        - name: Next_150
+          type: FLOAT64
+        - name: Nikkei_225
+          type: FLOAT64
+        - name: Nasdaq_Biotechnology
+          type: FLOAT64
+        - name: Nasdaq_100
+          type: FLOAT64
+        - name: S&P_NZX_50_INDEX_GROSS
+          type: FLOAT64
+        - name: S&P_100
+          type: FLOAT64
+        - name: OMX_Copenhagen_25_Index
+          type: FLOAT64
+        - name: Oslo_Bors_All_Share_Index_GI
+          type: FLOAT64
+        - name: Russell_2000_Index
+          type: FLOAT64
+        - name: CBOE_SKEW_INDEX
+          type: FLOAT64
+        - name: Semiconductor_Sector
+          type: FLOAT64
+        - name: S&P_500_Equal_Weighted
+          type: FLOAT64
+        - name: STI_Index
+          type: FLOAT64
+        - name: Europe_Stoxx_600
+          type: FLOAT64
+        - name: Euro_Stoxx_50
+          type: FLOAT64
+        - name: Volatility_Index_VIX
+          type: FLOAT64
+        - name: VVIX
+          type: FLOAT64
+        - name: DJIA_Volatility
+          type: FLOAT64
+        - name: NASDAQ_100_Volatility
+          type: FLOAT64
+        - name: Wilshire_5000_Total_Market
+          type: FLOAT64
+    csvOptions:
+      fieldDelimiter: ","
+      skipLeadingRows: 1
+    timePartitioningType: "MONTH"
+    timePartitioningField: "Date"
 
 triggers:
   - id: daily_schedule
