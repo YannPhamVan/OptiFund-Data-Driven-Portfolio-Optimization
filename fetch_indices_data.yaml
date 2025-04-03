@@ -23,13 +23,13 @@ tasks:
       ]
 
       # Fetch data in one request
-      df = yf.download(tickers, period="max", interval="1d", auto_adjust=True)["Close"]
+      df = yf.download(tickers, period="9d", interval="1d", auto_adjust=True)["Close"]
       # Save as CSV
       file_path = "data.csv"
-      df.to_csv(file_path, index=False)
+      df.to_csv(file_path, index=True)
 
     outputFiles:
-      - data.csv  # Declare specifickly file in output
+      - data.csv  # Explicitly declare the output file
 
   - id: upload_to_gcs
     type: io.kestra.plugin.gcp.gcs.Upload
@@ -39,8 +39,48 @@ tasks:
     from: "{{ outputs.fetch_data.outputFiles['data.csv'] }}"
     to: "gs://{{kv('GCP_BUCKET_NAME')}}/raw/data.csv"
 
+  - id: load_to_bigquery
+    type: io.kestra.plugin.scripts.python.Script
+    description: "Load data from GCS to BigQuery using dlt"
+    docker:
+      image: python:3.9-slim
+    beforeCommands:
+      - pip install --no-cache-dir dlt[bigquery] pandas
+    script: |
+      import dlt
+      import pandas as pd
+      import gcsfs
+
+      # Initialize dlt pipeline
+      pipeline = dlt.pipeline(
+          pipeline_name="gcs_to_bigquery",
+          destination="bigquery",
+          dataset_name="{{kv('GCP_DATASET')}}"
+      )
+
+      # Read CSV from GCS
+      fs = gcsfs.GCSFileSystem()
+      gcs_path = "gs://{{kv('GCP_BUCKET_NAME')}}/raw/data.csv"
+      with fs.open(gcs_path, 'r') as f:
+        df = pd.read_csv(f)
+
+      # Load to BigQuery
+      pipeline.run(df, table_name="indices_data", write_disposition="replace")
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: If you'd like to explore Kestra outputs, disable it.
+    disabled: true
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
 triggers:
   - id: daily_schedule
     type: io.kestra.plugin.core.trigger.Schedule
     cron: "0 0 * * *"  # Daily execution at 00:00 UTC
-
