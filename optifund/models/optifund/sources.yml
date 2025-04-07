@@ -1,0 +1,10 @@
+version: 1
+
+sources:
+  - name: indexes_cotations
+    meta:
+      external_location: 'dtc-de-project-454412.project_dataset'
+      formatter: oldstyle
+    tables:
+      - name: 
+      
