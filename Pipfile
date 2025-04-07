@@ -9,6 +9,7 @@ jupyter = "*"
 yfinance = "*"
 numpy = "*"
 pandas-datareader = "*"
+dbt-bigquery = "*"
 dbt = "*"
 
 [dev-packages]

@@ -1,0 +1,720 @@
+-- SELECT * FROM `dtc-de-project-454412.project_dataset.indices_data` LIMIT 10;
+
+
+-- SELECT COUNT(*) FROM `dtc-de-project-454412.project_dataset.indices_data`;
+
+
+-- Find First date without NULL value
+-- SELECT Date
+-- FROM `dtc-de-project-454412.project_dataset.indices_data`
+-- WHERE TRUE
+--   -- Exclure les lignes où au moins un indice est NULL
+--   AND NOT (China_Shanghai_Composite IS NULL
+--            OR AEX_Index IS NULL
+--            OR All_Ordinaries_Australia IS NULL
+--            OR 'S&P_ASX_200' IS NULL
+--            OR Bombay_BSE_30 IS NULL
+--            OR Bovespa_Index_Bresil IS NULL
+--            OR Cac_Next20 IS NULL
+--            OR Dow_Jones_Industrial_Average IS NULL
+--            OR Dow_Jones_Transportation_Average IS NULL
+--            OR Dow_Jones_Utility_Average IS NULL
+--            OR CAC_40 IS NULL
+--            OR FTSE_100 IS NULL
+--            OR DAX_P IS NULL
+--            OR 'S&P_500' IS NULL
+--            OR HANG_SENG_INDEX IS NULL
+--            OR IBEX IS NULL
+--            OR Nasdaq_Composite IS NULL
+--            OR Euronext_100 IS NULL
+--            OR Next_150 IS NULL
+--            OR Nikkei_225 IS NULL
+--            OR Nasdaq_Biotechnology IS NULL
+--            OR Nasdaq_100 IS NULL
+--            OR 'S&P_NZX_50_INDEX_GROSS' IS NULL
+--            OR 'S&P_100' IS NULL
+--            OR OMX_Copenhagen_25_Index IS NULL
+--            OR Oslo_Bors_All_Share_Index_GI IS NULL
+--            OR Russell_2000_Index IS NULL
+--            OR Semiconductor_Sector IS NULL
+--            OR 'S&P_500_Equal_Weighted' IS NULL
+--            OR STI_Index IS NULL
+--            OR Europe_Stoxx_600 IS NULL
+--            OR Euro_Stoxx_50 IS NULL
+--            OR Wilshire_5000_Total_Market IS NULL)
+-- ORDER BY Date
+-- LIMIT 1;
+
+
+-- Backfill NULL values
+-- SELECT
+--   Date,
+--   LAST_VALUE(China_Shanghai_Composite IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS China_Shanghai_Composite_filled,
+--   LAST_VALUE(AEX_Index IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS AEX_Index_filled,
+--   LAST_VALUE(All_Ordinaries_Australia IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS All_Ordinaries_Australia_filled,
+--   LAST_VALUE(`S&P_ASX_200` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `S&P_ASX_200_filled`,
+--   LAST_VALUE(Bombay_BSE_30 IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Bombay_BSE_30_filled,
+--   LAST_VALUE(Bovespa_Index_Bresil IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Bovespa_Index_Bresil_filled,
+--   LAST_VALUE(Cac_Next20 IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Cac_Next20_filled,
+--   LAST_VALUE(`Dow_Jones_Industrial_Average` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `Dow_Jones_Industrial_Average_filled`,
+--   LAST_VALUE(Dow_Jones_Transportation_Average IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Dow_Jones_Transportation_Average_filled,
+--   LAST_VALUE(Dow_Jones_Utility_Average IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Dow_Jones_Utility_Average_filled,
+--   LAST_VALUE(CAC_40 IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS CAC_40_filled,
+--   LAST_VALUE(`FTSE_100` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `FTSE_100_filled`,
+--   LAST_VALUE(DAX_P IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS DAX_P_filled,
+--   LAST_VALUE(`S&P_500` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `S&P_500_filled`,
+--   LAST_VALUE(HANG_SENG_INDEX IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS HANG_SENG_INDEX_filled,
+--   LAST_VALUE(`IBEX` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `IBEX_filled`,
+--   LAST_VALUE(Nasdaq_Composite IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Nasdaq_Composite_filled,
+--   LAST_VALUE(Euronext_100 IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Euronext_100_filled,
+--   LAST_VALUE(Next_150 IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Next_150_filled,
+--   LAST_VALUE(`Nikkei_225` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `Nikkei_225_filled`,
+--   LAST_VALUE(Nasdaq_Biotechnology IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Nasdaq_Biotechnology_filled,
+--   LAST_VALUE(Nasdaq_100 IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Nasdaq_100_filled,
+--   LAST_VALUE(`S&P_NZX_50_INDEX_GROSS` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `S&P_NZX_50_INDEX_GROSS_filled`,
+--   LAST_VALUE(`S&P_100` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `S&P_100_filled`,
+--   LAST_VALUE(OMX_Copenhagen_25_Index IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS OMX_Copenhagen_25_Index_filled,
+--   LAST_VALUE(Oslo_Bors_All_Share_Index_GI IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Oslo_Bors_All_Share_Index_GI_filled,
+--   LAST_VALUE(Russell_2000_Index IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Russell_2000_Index_filled,
+--   LAST_VALUE(`Semiconductor_Sector` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `Semiconductor_Sector_filled`,
+--   LAST_VALUE(`S&P_500_Equal_Weighted` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `S&P_500_Equal_Weighted_filled`,
+--   LAST_VALUE(`STI_Index` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `STI_Index_filled`,
+--   LAST_VALUE(Europe_Stoxx_600 IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS Europe_Stoxx_600_filled,
+--   LAST_VALUE(`Euro_Stoxx_50` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `Euro_Stoxx_50_filled`,
+--   LAST_VALUE(`Wilshire_5000_Total_Market` IGNORE NULLS) OVER (
+--     PARTITION BY 1 ORDER BY Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+--   ) AS `Wilshire_5000_Total_Market_filled`
+-- FROM `dtc-de-project-454412.project_dataset.indices_data`
+-- WHERE Date >= '2016-12-19'
+-- ORDER BY Date
+
+
+-- Transform wide table to long format for all 33 indices
+-- SELECT 
+--   Date,
+--   index_name,
+--   close_value
+-- FROM `dtc-de-project-454412.project_dataset.indices_data`
+-- UNPIVOT (
+--   close_value FOR index_name IN (
+--     China_Shanghai_Composite,
+--     AEX_Index,
+--     All_Ordinaries_Australia,
+--     `S&P_ASX_200`,
+--     Bombay_BSE_30,
+--     Bovespa_Index_Bresil,
+--     Cac_Next20,
+--     Dow_Jones_Industrial_Average,
+--     Dow_Jones_Transportation_Average,
+--     Dow_Jones_Utility_Average,
+--     CAC_40,
+--     FTSE_100,
+--     DAX_P,
+--     `S&P_500`,
+--     HANG_SENG_INDEX,
+--     IBEX,
+--     Nasdaq_Composite,
+--     Euronext_100,
+--     Next_150,
+--     Nikkei_225,
+--     Nasdaq_Biotechnology,
+--     Nasdaq_100,
+--     `S&P_NZX_50_INDEX_GROSS`,
+--     `S&P_100`,
+--     OMX_Copenhagen_25_Index,
+--     Oslo_Bors_All_Share_Index_GI,
+--     Russell_2000_Index,
+--     Semiconductor_Sector,
+--     `S&P_500_Equal_Weighted`,
+--     STI_Index,
+--     Europe_Stoxx_600,
+--     Euro_Stoxx_50,
+--     Wilshire_5000_Total_Market
+--   )
+-- )
+-- WHERE Date >= '2016-12-19' -- Filter to the common available period
+
+
+-- Compute daily returns per index
+-- WITH daily_returns AS (
+--   SELECT
+--     Date,
+--     index_name,
+--     close_value,
+--     LAG(close_value) OVER (PARTITION BY index_name ORDER BY Date) AS previous_close,
+--   FROM `dtc-de-project-454412.project_dataset.indices_data`
+--   UNPIVOT (
+--     close_value FOR index_name IN (
+--       China_Shanghai_Composite,
+--       AEX_Index,
+--       All_Ordinaries_Australia,
+--       `S&P_ASX_200`,
+--       Bombay_BSE_30,
+--       Bovespa_Index_Bresil,
+--       Cac_Next20,
+--       Dow_Jones_Industrial_Average,
+--       Dow_Jones_Transportation_Average,
+--       Dow_Jones_Utility_Average,
+--       CAC_40,
+--       FTSE_100,
+--       DAX_P,
+--       `S&P_500`,
+--       HANG_SENG_INDEX,
+--       IBEX,
+--       Nasdaq_Composite,
+--       Euronext_100,
+--       Next_150,
+--       Nikkei_225,
+--       Nasdaq_Biotechnology,
+--       Nasdaq_100,
+--       `S&P_NZX_50_INDEX_GROSS`,
+--       `S&P_100`,
+--       OMX_Copenhagen_25_Index,
+--       Oslo_Bors_All_Share_Index_GI,
+--       Russell_2000_Index,
+--       Semiconductor_Sector,
+--       `S&P_500_Equal_Weighted`,
+--       STI_Index,
+--       Europe_Stoxx_600,
+--       Euro_Stoxx_50,
+--       Wilshire_5000_Total_Market
+--     )
+--   )
+--   WHERE Date >= '2016-12-19'
+-- )
+-- 
+-- SELECT
+--   Date,
+--   index_name,
+--   close_value,
+--   previous_close,
+--   SAFE_DIVIDE(close_value - previous_close, previous_close) AS daily_return
+-- FROM daily_returns
+
+
+-- Compute cumulative returns per index from 2016-12-19
+-- WITH daily_returns AS (
+--   SELECT
+--     Date,
+--     index_name,
+--     close_value,
+--     LAG(close_value) OVER (PARTITION BY index_name ORDER BY Date) AS previous_close
+--   FROM `dtc-de-project-454412.project_dataset.indices_data`
+--   UNPIVOT (
+--     close_value FOR index_name IN (
+--       China_Shanghai_Composite,
+--       AEX_Index,
+--       All_Ordinaries_Australia,
+--       `S&P_ASX_200`,
+--       Bombay_BSE_30,
+--       Bovespa_Index_Bresil,
+--       Cac_Next20,
+--       Dow_Jones_Industrial_Average,
+--       Dow_Jones_Transportation_Average,
+--       Dow_Jones_Utility_Average,
+--       CAC_40,
+--       FTSE_100,
+--       DAX_P,
+--       `S&P_500`,
+--       HANG_SENG_INDEX,
+--       IBEX,
+--       Nasdaq_Composite,
+--       Euronext_100,
+--       Next_150,
+--       Nikkei_225,
+--       Nasdaq_Biotechnology,
+--       Nasdaq_100,
+--       `S&P_NZX_50_INDEX_GROSS`,
+--       `S&P_100`,
+--       OMX_Copenhagen_25_Index,
+--       Oslo_Bors_All_Share_Index_GI,
+--       Russell_2000_Index,
+--       Semiconductor_Sector,
+--       `S&P_500_Equal_Weighted`,
+--       STI_Index,
+--       Europe_Stoxx_600,
+--       Euro_Stoxx_50,
+--       Wilshire_5000_Total_Market
+--     )
+--   )
+--   WHERE Date >= '2016-12-19'
+-- ),
+-- 
+-- -- Compute daily return
+-- returns_with_daily AS (
+--   SELECT
+--     Date,
+--     index_name,
+--     SAFE_DIVIDE(close_value - previous_close, previous_close) AS daily_return
+--   FROM daily_returns
+-- ),
+-- 
+-- -- Compute cumulative return: cumulative product of (1 + daily return)
+-- returns_with_cumulative AS (
+--   SELECT
+--     Date,
+--     index_name,
+--     daily_return,
+--     EXP(SUM(LN(1 + daily_return)) OVER (PARTITION BY index_name ORDER BY Date)) - 1 AS cumulative_return
+--   FROM returns_with_daily
+-- )
+-- 
+-- -- Final output
+-- SELECT * 
+-- FROM returns_with_cumulative
+-- ORDER BY Date, index_name
+
+
+-- Calculate cumulative return (%) between first common date and last available value per index
+-- WITH base AS (
+--   SELECT
+--     Date,
+--     `China_Shanghai_Composite`,
+--     `AEX_Index`,
+--     `All_Ordinaries_Australia`,
+--     `S&P_ASX_200`,
+--     `Bombay_BSE_30`,
+--     `Bovespa_Index_Bresil`,
+--     `Cac_Next20`,
+--     `Dow_Jones_Industrial_Average`,
+--     `Dow_Jones_Transportation_Average`,
+--     `Dow_Jones_Utility_Average`,
+--     `CAC_40`,
+--     `FTSE_100`,
+--     `DAX_P`,
+--     `S&P_500`,
+--     `HANG_SENG_INDEX`,
+--     `IBEX`,
+--     `Nasdaq_Composite`,
+--     `Euronext_100`,
+--     `Next_150`,
+--     `Nikkei_225`,
+--     `Nasdaq_Biotechnology`,
+--     `Nasdaq_100`,
+--     `S&P_NZX_50_INDEX_GROSS`,
+--     `S&P_100`,
+--     `OMX_Copenhagen_25_Index`,
+--     `Oslo_Bors_All_Share_Index_GI`,
+--     `Russell_2000_Index`,
+--     `Semiconductor_Sector`,
+--     `S&P_500_Equal_Weighted`,
+--     `STI_Index`,
+--     `Europe_Stoxx_600`,
+--     `Euro_Stoxx_50`,
+--     `Wilshire_5000_Total_Market`
+--   FROM `dtc-de-project-454412.project_dataset.indices_data`
+-- ),
+-- 
+-- start_values AS (
+--   SELECT * FROM base WHERE Date = '2016-12-19'
+-- ),
+-- 
+-- end_values AS (
+--   SELECT
+--     'last' AS label,
+--     MAX(Date) AS max_date
+--   FROM base
+-- ),
+-- 
+-- last_known AS (
+--   -- For each index, find the last non-null value (simulates a backfill)
+--   SELECT
+--     'last' AS label,
+--     MAX(IF(`China_Shanghai_Composite` IS NOT NULL, Date, NULL)) AS `China_Shanghai_Composite_date`,
+--     MAX(IF(`AEX_Index` IS NOT NULL, Date, NULL)) AS `AEX_Index_date`,
+--     MAX(IF(`All_Ordinaries_Australia` IS NOT NULL, Date, NULL)) AS All_Ordinaries_Australia_date,
+--     MAX(IF(`S&P_ASX_200` IS NOT NULL, Date, NULL)) AS `S&P_ASX_200_date`,
+--     MAX(IF(`Bombay_BSE_30` IS NOT NULL, Date, NULL)) AS Bombay_BSE_30_date,
+--     MAX(IF(`Bovespa_Index_Bresil` IS NOT NULL, Date, NULL)) AS Bovespa_Index_Bresil_date,
+--     MAX(IF(`Cac_Next20` IS NOT NULL, Date, NULL)) AS Cac_Next20_date,
+--     MAX(IF(`Dow_Jones_Industrial_Average` IS NOT NULL, Date, NULL)) AS Dow_Jones_Industrial_Average_date,
+--     MAX(IF(`Dow_Jones_Transportation_Average` IS NOT NULL, Date, NULL)) AS Dow_Jones_Transportation_Average_date,
+--     MAX(IF(`Dow_Jones_Utility_Average` IS NOT NULL, Date, NULL)) AS Dow_Jones_Utility_Average_date,
+--     MAX(IF(`CAC_40` IS NOT NULL, Date, NULL)) AS CAC_40_date,
+--     MAX(IF(`FTSE_100` IS NOT NULL, Date, NULL)) AS FTSE_100_date,
+--     MAX(IF(`DAX_P` IS NOT NULL, Date, NULL)) AS DAX_P_date,
+--     MAX(IF(`S&P_500` IS NOT NULL, Date, NULL)) AS `S&P_500_date`,
+--     MAX(IF(`HANG_SENG_INDEX` IS NOT NULL, Date, NULL)) AS HANG_SENG_INDEX_date,
+--     MAX(IF(`IBEX` IS NOT NULL, Date, NULL)) AS IBEX_date,
+--     MAX(IF(`Nasdaq_Composite` IS NOT NULL, Date, NULL)) AS Nasdaq_Composite_date,
+--     MAX(IF(`Euronext_100` IS NOT NULL, Date, NULL)) AS Euronext_100_date,
+--     MAX(IF(`Next_150` IS NOT NULL, Date, NULL)) AS Next_150_date,
+--     MAX(IF(`Nikkei_225` IS NOT NULL, Date, NULL)) AS Nikkei_225_date,
+--     MAX(IF(`Nasdaq_Biotechnology` IS NOT NULL, Date, NULL)) AS Nasdaq_Biotechnology_date,
+--     MAX(IF(`Nasdaq_100` IS NOT NULL, Date, NULL)) AS Nasdaq_100_date,
+--     MAX(IF(`S&P_NZX_50_INDEX_GROSS` IS NOT NULL, Date, NULL)) AS `S&P_NZX_50_INDEX_GROSS_date`,
+--     MAX(IF(`S&P_100` IS NOT NULL, Date, NULL)) AS `S&P_100_date`,
+--     MAX(IF(`OMX_Copenhagen_25_Index` IS NOT NULL, Date, NULL)) AS OMX_Copenhagen_25_Index_date,
+--     MAX(IF(`Oslo_Bors_All_Share_Index_GI` IS NOT NULL, Date, NULL)) AS Oslo_Bors_All_Share_Index_GI_date,
+--     MAX(IF(`Russell_2000_Index` IS NOT NULL, Date, NULL)) AS Russell_2000_Index_date,
+--     MAX(IF(`Semiconductor_Sector` IS NOT NULL, Date, NULL)) AS Semiconductor_Sector_date,
+--     MAX(IF(`S&P_500_Equal_Weighted` IS NOT NULL, Date, NULL)) AS `S&P_500_Equal_Weighted_date`,
+--     MAX(IF(`STI_Index` IS NOT NULL, Date, NULL)) AS STI_Index_date,
+--     MAX(IF(`Europe_Stoxx_600` IS NOT NULL, Date, NULL)) AS Europe_Stoxx_600_date,
+--     MAX(IF(`Euro_Stoxx_50` IS NOT NULL, Date, NULL)) AS Euro_Stoxx_50_date,
+--     MAX(IF(`Wilshire_5000_Total_Market` IS NOT NULL, Date, NULL)) AS Wilshire_5000_Total_Market_date
+--   FROM base
+-- ),
+-- 
+-- -- Final cumulative return table
+-- cumulative_returns AS (
+--   SELECT
+--     'S&P_500' AS index,
+--     ROUND(((b.`S&P_500` - a.`S&P_500`) / a.`S&P_500`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`S&P_500_date`
+-- 
+--   UNION ALL
+-- 
+--   SELECT
+--     'CAC_40', ROUND(((b.`CAC_40` - a.`CAC_40`) / a.`CAC_40`) * 100, 2)
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.CAC_40_date
+-- 
+--   UNION ALL
+-- 
+--   SELECT
+--     'China_Shanghai_Composite', ROUND(((b.`China_Shanghai_Composite` - a.`China_Shanghai_Composite`) / a.`China_Shanghai_Composite`) * 100, 2)
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.China_Shanghai_Composite_date
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'AEX_Index' AS index,
+--     ROUND(((b.`AEX_Index` - a.`AEX_Index`) / a.`AEX_Index`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`AEX_Index_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'All_Ordinaries_Australia' AS index,
+--     ROUND(((b.`All_Ordinaries_Australia` - a.`All_Ordinaries_Australia`) / a.`All_Ordinaries_Australia`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`All_Ordinaries_Australia_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'S&P_ASX_200' AS index,
+--     ROUND(((b.`S&P_ASX_200` - a.`S&P_ASX_200`) / a.`S&P_ASX_200`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`S&P_ASX_200_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Bombay_BSE_30' AS index,
+--     ROUND(((b.`Bombay_BSE_30` - a.`Bombay_BSE_30`) / a.`Bombay_BSE_30`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Bombay_BSE_30_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Bovespa_Index_Bresil' AS index,
+--     ROUND(((b.`Bovespa_Index_Bresil` - a.`Bovespa_Index_Bresil`) / a.`Bovespa_Index_Bresil`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Bovespa_Index_Bresil_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Cac_Next20' AS index,
+--     ROUND(((b.`Cac_Next20` - a.`Cac_Next20`) / a.`Cac_Next20`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Cac_Next20_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Dow_Jones_Industrial_Average' AS index,
+--     ROUND(((b.`Dow_Jones_Industrial_Average` - a.`Dow_Jones_Industrial_Average`) / a.`Dow_Jones_Industrial_Average`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Dow_Jones_Industrial_Average_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Dow_Jones_Transportation_Average' AS index,
+--     ROUND(((b.`Dow_Jones_Transportation_Average` - a.`Dow_Jones_Transportation_Average`) / a.`Dow_Jones_Transportation_Average`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Dow_Jones_Transportation_Average_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Dow_Jones_Utility_Average' AS index,
+--     ROUND(((b.`Dow_Jones_Utility_Average` - a.`Dow_Jones_Utility_Average`) / a.`Dow_Jones_Utility_Average`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Dow_Jones_Utility_Average_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'FTSE_100' AS index,
+--     ROUND(((b.`FTSE_100` - a.`FTSE_100`) / a.`FTSE_100`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`FTSE_100_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'DAX_P' AS index,
+--     ROUND(((b.`DAX_P` - a.`DAX_P`) / a.`DAX_P`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`DAX_P_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'HANG_SENG_INDEX' AS index,
+--     ROUND(((b.`HANG_SENG_INDEX` - a.`HANG_SENG_INDEX`) / a.`HANG_SENG_INDEX`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`HANG_SENG_INDEX_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'IBEX' AS index,
+--     ROUND(((b.`IBEX` - a.`IBEX`) / a.`IBEX`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`IBEX_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Nasdaq_Composite' AS index,
+--     ROUND(((b.`Nasdaq_Composite` - a.`Nasdaq_Composite`) / a.`Nasdaq_Composite`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Nasdaq_Composite_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Euronext_100' AS index,
+--     ROUND(((b.`Euronext_100` - a.`Euronext_100`) / a.`Euronext_100`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Euronext_100_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Next_150' AS index,
+--     ROUND(((b.`Next_150` - a.`Next_150`) / a.`Next_150`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Next_150_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Nikkei_225' AS index,
+--     ROUND(((b.`Nikkei_225` - a.`Nikkei_225`) / a.`Nikkei_225`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Nikkei_225_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Nasdaq_Biotechnology' AS index,
+--     ROUND(((b.`Nasdaq_Biotechnology` - a.`Nasdaq_Biotechnology`) / a.`Nasdaq_Biotechnology`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Nasdaq_Biotechnology_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Nasdaq_100' AS index,
+--     ROUND(((b.`Nasdaq_100` - a.`Nasdaq_100`) / a.`Nasdaq_100`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Nasdaq_100_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'S&P_NZX_50_INDEX_GROSS' AS index,
+--     ROUND(((b.`S&P_NZX_50_INDEX_GROSS` - a.`S&P_NZX_50_INDEX_GROSS`) / a.`S&P_NZX_50_INDEX_GROSS`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`S&P_NZX_50_INDEX_GROSS_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'S&P_100' AS index,
+--     ROUND(((b.`S&P_100` - a.`S&P_100`) / a.`S&P_100`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`S&P_100_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'OMX_Copenhagen_25_Index' AS index,
+--     ROUND(((b.`OMX_Copenhagen_25_Index` - a.`OMX_Copenhagen_25_Index`) / a.`OMX_Copenhagen_25_Index`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`OMX_Copenhagen_25_Index_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Oslo_Bors_All_Share_Index_GI' AS index,
+--     ROUND(((b.`Oslo_Bors_All_Share_Index_GI` - a.`Oslo_Bors_All_Share_Index_GI`) / a.`Oslo_Bors_All_Share_Index_GI`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Oslo_Bors_All_Share_Index_GI_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Russell_2000_Index' AS index,
+--     ROUND(((b.`Russell_2000_Index` - a.`Russell_2000_Index`) / a.`Russell_2000_Index`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Russell_2000_Index_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Semiconductor_Sector' AS index,
+--     ROUND(((b.`Semiconductor_Sector` - a.`Semiconductor_Sector`) / a.`Semiconductor_Sector`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Semiconductor_Sector_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'S&P_500_Equal_Weighted' AS index,
+--     ROUND(((b.`S&P_500_Equal_Weighted` - a.`S&P_500_Equal_Weighted`) / a.`S&P_500_Equal_Weighted`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`S&P_500_Equal_Weighted_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'STI_Index' AS index,
+--     ROUND(((b.`STI_Index` - a.`STI_Index`) / a.`STI_Index`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`STI_Index_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Europe_Stoxx_600' AS index,
+--     ROUND(((b.`Europe_Stoxx_600` - a.`Europe_Stoxx_600`) / a.`Europe_Stoxx_600`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Europe_Stoxx_600_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Euro_Stoxx_50' AS index,
+--     ROUND(((b.`Euro_Stoxx_50` - a.`Euro_Stoxx_50`) / a.`Euro_Stoxx_50`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Euro_Stoxx_50_date`
+-- 
+--   UNION ALL
+-- 
+--     SELECT
+--     'Wilshire_5000_Total_Market' AS index,
+--     ROUND(((b.`Wilshire_5000_Total_Market` - a.`Wilshire_5000_Total_Market`) / a.`Wilshire_5000_Total_Market`) * 100, 2) AS return_percent
+--   FROM base a
+--   JOIN last_known lk ON a.Date = '2016-12-19'
+--   JOIN base b ON b.Date = lk.`Wilshire_5000_Total_Market_date`
+-- )
+-- 
+-- SELECT * FROM cumulative_returns
+-- ORDER BY return_percent DESC;
