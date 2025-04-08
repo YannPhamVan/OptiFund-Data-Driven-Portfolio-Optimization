@@ -1,10 +1,8 @@
-version: 1
+version: 2
 
 sources:
-  - name: indexes_cotations
-    meta:
-      external_location: 'dtc-de-project-454412.project_dataset'
-      formatter: oldstyle
+  - name: project_dataset
+    database: dtc-de-project-454412   # GCP project  ID
+    schema: project_dataset           # BigQuery dataset ID
     tables:
-      - name: 
-      
+      - name: indices_data            # BigQuery source table 
