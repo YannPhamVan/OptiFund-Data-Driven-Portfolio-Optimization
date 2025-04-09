@@ -1,8 +1,0 @@
-version: 2
-
-sources:
-  - name: project_dataset
-    database: dtc-de-project-454412   # GCP project  ID
-    schema: project_dataset           # BigQuery dataset ID
-    tables:
-      - name: indices_data            # BigQuery source table 

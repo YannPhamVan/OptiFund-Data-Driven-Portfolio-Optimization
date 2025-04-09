@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: project_dataset
+    database: dtc-de-project-454412
+    schema: project_dataset
+    tables:
+      - name: indices_data
+
+models:
+  - name: cumulative_returns
+    description: |
+      Computes the total return percentage for each index from the first common date (2016-12-19)
+      to the most recent available date, with forward fill for missing values.
+    columns:
+      - name: index
+        description: Name of the financial index
+      - name: return_percent
+        description: Total return percentage over the period
