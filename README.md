@@ -49,7 +49,8 @@ This project has been designed to be easily reproducible by following the steps 
 ### 1. Prerequisites
 
 - Google Cloud account with billing enabled
-![Industrial Equipment Monitoring](images/Setting up a service account on GCP.png)
+
+![Setting_up_a_service_account_on_GCP](images/Setting_up_a_service_account_on_GCP.png)
 - Enabled APIs:
   - BigQuery
   - Cloud Storage
