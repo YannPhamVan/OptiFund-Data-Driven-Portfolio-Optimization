@@ -50,7 +50,7 @@ This project has been designed to be easily reproducible by following the steps 
 
 - Google Cloud account with billing enabled
 
-![Setting_up_a_service_account_on_GCP](images/Setting_up_a_service_account_on_GCP.png)
+![Setting_up_a_service_account_on_GCP](docs/Setting_up_a_service_account_on_GCP.png)
 - Enabled APIs:
   - BigQuery
   - Cloud Storage
