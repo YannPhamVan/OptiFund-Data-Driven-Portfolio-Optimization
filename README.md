@@ -49,12 +49,12 @@ This project has been designed to be easily reproducible by following the steps 
 ### 1. Prerequisites
 
 - Google Cloud account with billing enabled
-
 ![Setting_up_a_service_account_on_GCP](docs/Setting_up_a_service_account_on_GCP.png)
 - Enabled APIs:
   - BigQuery
   - Cloud Storage
   - Service Account
+![Managing_Keys](docs/Managing_Keys.png)
 - A project created in GCP (this project uses the `EU` multi-region)
 - Requirements :
   - Python 3.10+
@@ -84,7 +84,7 @@ This creates:
 - A Cloud Storage bucket for raw data
 - A BigQuery dataset for the analytics layer
 - A service account (key not committed)
-
+![Creating_main.tf_file](docs/Creating_main.tf_file.png)
 ⚠️ Create a file named `keys/my-creds.json` in the terraform folder with your own GCP credentials.
 
 ### 4. Data ingestion (Kestra)
@@ -111,6 +111,7 @@ The flow:
 - Calls `yfinance` to collect daily closing prices of indexes
 - Saves the files in Cloud Storage
 - Loads the data into BigQuery
+![Ingestion_workflow_Kestra](docs/Ingestion_workflow_Kestra.png)
 
 ### 5. Data transformation (dbt)
 
