@@ -1,4 +1,12 @@
+![Project Status](https://img.shields.io/badge/status-completed-brightgreen)
+![Made with dbt](https://img.shields.io/badge/dbt-v1.7-blue)
+![Kestra](https://img.shields.io/badge/orchestrator-kestra-0e83cd)
+![Terraform](https://img.shields.io/badge/IaC-terraform-623CE4)
+
 # OptiFund : Data-Driven Portfolio Optimization
+
+This project aims to build a reproducible data pipeline to collect, transform, and analyze main market indexes data in order to identify the best-performing and least-correlated assets.  
+It leverages batch orchestration with Kestra, infrastructure-as-code with Terraform, cloud storage (GCS), and transformation logic with dbt and BigQuery.
 
 ## 🧠 Project Overview
 
@@ -57,12 +65,16 @@ This project has been designed to be easily reproducible by following the steps 
 ![Managing_Keys](docs/Managing_Keys.png)
 - A project created in GCP (this project uses the `EU` multi-region)
 - Requirements :
-  - Python 3.10+
+  - Python 3.10+ (Python dependances declared in `Pipfile`)
   - `pipenv` installed globally
   ```bash
   pip install pipenv
   pipenv shell
   ```
+  - Kestra (via Docker Compose)
+  - Terraform 1.6.x
+  - dbt-core 1.7.x
+  - BigQuery
 
 ### 2. Clone the repository
 
@@ -133,5 +145,10 @@ It includes:
 - An overview of the best-performing stocks
 - A correlation matrix
 - Portfolio composition visuals
+
+**Dashboard Overview**
+![Dashboard Overview](docs/dashboard_returns.png)
+![Correlation Matrix](docs/dashboard_correlations.png)
+
 
 Feel free to adapt paths or commands depending on your setup.
