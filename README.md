@@ -49,6 +49,7 @@ This project has been designed to be easily reproducible by following the steps 
 ### 1. Prerequisites
 
 - Google Cloud account with billing enabled
+![Industrial Equipment Monitoring](images/'Setting up a service account on GCP.png')
 - Enabled APIs:
   - BigQuery
   - Cloud Storage
@@ -92,7 +93,7 @@ You can view the flow in `orchestration_kestra/flows/` folder.
 
 To start Kestra:
 ```bash
-cd orchestration_kestra
+cd ../orchestration_kestra
 docker compose up -d
 ```
 Then open your browser at: http://localhost:8080
@@ -106,7 +107,7 @@ docker compose down
 Once Kestra is installed and running locally (via Docker), launch the flow directly from the UI or using the CLI.
 
 The flow:
-- Calls yfinance to collect daily closing prices of S&P 500 companies
+- Calls `yfinance` to collect daily closing prices of indexes
 - Saves the files in Cloud Storage
 - Loads the data into BigQuery
 
@@ -116,6 +117,7 @@ Navigate to the `dbt_optifund` folder, then run the dbt pipeline:
 ```bash
 cd ../dbt_optifund
 dbt debug
+dbt deps
 dbt run --select cumulative_returns
 dbt run --select correlation_matrix
 ```
