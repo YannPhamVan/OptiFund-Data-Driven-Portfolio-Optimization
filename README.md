@@ -1,4 +1,4 @@
-# OptiFund: Data-Driven Portfolio Optimization
+# OptiFund : Data-Driven Portfolio Optimization
 
 ## 🧠 Project Overview
 
@@ -108,7 +108,7 @@ docker compose down
 Once Kestra is installed and running locally (via Docker), launch the flow directly from the UI or using the CLI.
 
 The flow:
-- Calls `yfinance` to collect daily closing prices of indexes
+- Calls `yfinance` to collect daily closing prices of indexes (Daily execution at 00:00 UTC via trigger)
 - Saves the files in Cloud Storage
 - Loads the data into BigQuery
 ![Ingestion_workflow_Kestra](docs/Ingestion_workflow_Kestra.png)
