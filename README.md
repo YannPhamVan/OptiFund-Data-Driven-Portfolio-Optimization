@@ -7,6 +7,7 @@
 
 This project aims to build a reproducible data pipeline to collect, transform, and analyze main market indexes data in order to identify the best-performing and least-correlated assets.  
 It leverages batch orchestration with Kestra, infrastructure-as-code with Terraform, cloud storage (GCS), and transformation logic with dbt and BigQuery.
+![Bannière](docs/banniere.png)
 
 ## 🧠 Project Overview
 
