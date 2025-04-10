@@ -1,0 +1,51 @@
+# ---- Python / Pipenv ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-wheel-metadata/
+*.egg-info/
+
+# ---- Logs / Outputs ----
+logs/
+*.log
+
+# ---- Environnement virtuel ----
+.env
+.venv
+venv/
+ENV/
+env/
+*.env
+
+# ---- Jupyter / notebooks ----
+.ipynb_checkpoints/
+
+# ---- Kestra / Terraform credentials ----
+*.json
+
+# ---- Terraform ----
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.tfvars
+terraform.tfvars.json
+override.tf
+override.tf.json
+*.auto.tfvars
+.terraform.lock.hcl
+
+# ---- dbt ----
+dbt_packages/
+target/
+dbt_modules/
+
+# ---- VSCode / IDEs ----
+.vscode/
+.idea/
+
+# ---- Mac / Linux / Windows ----
+.DS_Store
+Thumbs.db
