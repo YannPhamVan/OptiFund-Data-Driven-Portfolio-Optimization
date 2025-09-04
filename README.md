@@ -66,7 +66,7 @@ This project has been designed to be easily reproducible by following the steps 
 ![Managing_Keys](docs/Managing_Keys.png)
 - A project created in GCP (this project uses the `EU` multi-region)
 - Requirements :
-  - Python 3.10+ (Python dependances declared in `Pipfile`)
+  - Python 3.12 (Python dependances declared in `Pipfile`)
   - `pipenv` installed globally
   ```bash
   pip install pipenv
