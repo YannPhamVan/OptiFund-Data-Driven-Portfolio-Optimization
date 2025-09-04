@@ -475,7 +475,7 @@
                 "sha256:447760081918216aa4fd4ca78a4b6a848b81307b2ea94c810255334b759e1dc3"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==7.0.1"
+            "version": ">=8.6.1"
         },
         "defusedxml": {
             "hashes": [
